@@ -69,7 +69,7 @@ Current release info
 | Name | Downloads | Version | Platforms |
 | --- | --- | --- | --- |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-epics--base-green.svg)](https://anaconda.org/conda-forge/epics-base) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/epics-base.svg)](https://anaconda.org/conda-forge/epics-base) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/epics-base.svg)](https://anaconda.org/conda-forge/epics-base) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/epics-base.svg)](https://anaconda.org/conda-forge/epics-base) |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-epics--base--libs-green.svg)](https://anaconda.org/conda-forge/epics-base-libs) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/epics-base-libs.svg)](https://anaconda.org/conda-forge/epics-base-libs) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/epics-base-libs.svg)](https://anaconda.org/conda-forge/epics-base-libs) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/epics-base-libs.svg)](https://anaconda.org/conda-forge/epics-base-libs) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-epics--base--static--libs-green.svg)](https://anaconda.org/conda-forge/epics-base-static-libs) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/epics-base-static-libs.svg)](https://anaconda.org/conda-forge/epics-base-static-libs) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/epics-base-static-libs.svg)](https://anaconda.org/conda-forge/epics-base-static-libs) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/epics-base-static-libs.svg)](https://anaconda.org/conda-forge/epics-base-static-libs) |
 
 Installing epics-base
 =====================
@@ -80,10 +80,10 @@ Installing `epics-base` from the `conda-forge` channel can be achieved by adding
 conda config --add channels conda-forge
 ```
 
-Once the `conda-forge` channel has been enabled, `epics-base, epics-base-libs` can be installed with:
+Once the `conda-forge` channel has been enabled, `epics-base, epics-base-static-libs` can be installed with:
 
 ```
-conda install epics-base epics-base-libs
+conda install epics-base epics-base-static-libs
 ```
 
 It is possible to list all of the versions of `epics-base` available on your platform with:
@@ -158,7 +158,4 @@ Feedstock Maintainers
 
 * [@beenje](https://github.com/beenje/)
 * [@tacaswell](https://github.com/tacaswell/)
-
-
-<!-- dummy commit to enable rerendering -->
 
