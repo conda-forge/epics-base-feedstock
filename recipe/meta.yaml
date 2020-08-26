@@ -1,5 +1,5 @@
-{% set version = "7.0.4" %}
-{% set sha256 = "1f0597b91740742beec49ca1ca59e7b71f63483b7495068b4f0f685c0cda9e69" %}
+{% set version = "7.0.4.1" %}
+{% set sha256 = "7b1aa5a0b0a381207b3aa64b4496ffbdd0882ba3d57a09d75b94a9ef1fef668d" %}
 
 package:
   name: epics-base
