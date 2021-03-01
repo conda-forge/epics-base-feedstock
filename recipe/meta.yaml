@@ -110,7 +110,7 @@ outputs:
 
 about:
   home: http://www.aps.anl.gov/epics
-  license: Epics Open
+  license: EPICS
   license_file: LICENSE
   summary: EPICS Base Library
 
