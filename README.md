@@ -3,7 +3,7 @@ About epics-base
 
 Home: http://www.aps.anl.gov/epics
 
-Package license: Epics Open
+Package license: EPICS
 
 Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/epics-base-feedstock/blob/master/LICENSE.txt)
 
@@ -149,5 +149,6 @@ Feedstock Maintainers
 =====================
 
 * [@beenje](https://github.com/beenje/)
+* [@mrakitin](https://github.com/mrakitin/)
 * [@tacaswell](https://github.com/tacaswell/)
 
