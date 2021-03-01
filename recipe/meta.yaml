@@ -116,5 +116,6 @@ about:
 
 extra:
   recipe-maintainers:
-    - tacaswell
     - beenje
+    - mrakitin
+    - tacaswell
