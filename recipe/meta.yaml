@@ -1,10 +1,10 @@
-# Always use 4 numbers in the version to match run_exports
-{% set version = "7.0.5.0" %}
+{% set version = "7.0.5" %}
 {% set sha256 = "faf8dd3bfa4a3b0036e8b62a5f647a0596bfd579f31c6cc00b2ce2f82bcf9de1" %}
 
 package:
   name: epics-base
-  version: {{ version }}
+  # Always use 4 numbers in the version to match run_exports!
+  version: 7.0.5.0
 
 source:
   fn: base-{{ version }}.tar.gz
