@@ -98,7 +98,7 @@ outputs:
         # To run pre-build.py
         - python >=3.6  # [win]
       run:
-        - {{ pin_subpackage('epics-base', max_pin="x.x.x.x") }}
+        - {{ pin_subpackage('epics-base', exact=True) }}
     files:
       - epics/lib/*/*.lib  # [win]
       - epics/lib/*/*.a    # [not win]
