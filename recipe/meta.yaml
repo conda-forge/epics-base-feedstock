@@ -1,9 +1,10 @@
-{% set version = "7.0.4" %}
-{% set sha256 = "1f0597b91740742beec49ca1ca59e7b71f63483b7495068b4f0f685c0cda9e69" %}
+{% set version = "7.0.5" %}
+{% set sha256 = "faf8dd3bfa4a3b0036e8b62a5f647a0596bfd579f31c6cc00b2ce2f82bcf9de1" %}
 
 package:
   name: epics-base
-  version: {{ version }}
+  # Always use 4 numbers in the version to match run_exports!
+  version: {{ version }}.0
 
 source:
   fn: base-{{ version }}.tar.gz
@@ -97,7 +98,7 @@ outputs:
         # To run pre-build.py
         - python >=3.6  # [win]
       run:
-        - {{ pin_subpackage('epics-base', max_pin="x.x.x.x") }}
+        - {{ pin_subpackage('epics-base', exact=True) }}
     files:
       - epics/lib/*/*.lib  # [win]
       - epics/lib/*/*.a    # [not win]
@@ -110,11 +111,12 @@ outputs:
 
 about:
   home: http://www.aps.anl.gov/epics
-  license: Epics Open
+  license: EPICS
   license_file: LICENSE
   summary: EPICS Base Library
 
 extra:
   recipe-maintainers:
-    - tacaswell
     - beenje
+    - mrakitin
+    - tacaswell
