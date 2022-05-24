@@ -11,24 +11,21 @@ INSTALL_LOCATION=${EPICS_BASE}
 MSI=\$(EPICS_BASE)/bin/\$(EPICS_HOST_ARCH)/msi
 EOF
 
-cat << EOF >> configure/os/CONFIG_SITE.Common.linux-x86_64
+cat << EOF >> configure/os/CONFIG_SITE.Common.linuxCommon
 # Set GNU_DIR to BUILD_PREFIX or PREFIX if not set (when not using conda-build)
 # Allow to compile without conda-build by installing manually the compilers
 # in a local conda environment
 GNU_DIR = \$(or \$(BUILD_PREFIX),$PREFIX)
-CMPLR_PREFIX = x86_64-conda_cos6-linux-gnu-
+CMPLR_PREFIX=\$(patsubst %-gcc,%-,\${GCC})
 
 # --disable-new-dtags is required to avoid LD_LIBRARY_PATH overrride RPATH settings
-OP_SYS_LDFLAGS += -Wl,--disable-new-dtags -Wl,-rpath,${PREFIX}/lib -Wl,-rpath-link,${PREFIX}/lib -L${PREFIX}/lib -Wl,-rpath-link,${EPICS_BASE}/lib/linux-x86_64
+OP_SYS_LDFLAGS += -Wl,--disable-new-dtags -Wl,-rpath,${PREFIX}/lib -Wl,-rpath-link,${PREFIX}/lib -L${PREFIX}/lib -Wl,-rpath-link,${EPICS_BASE}/lib/${EPICS_HOST_ARCH}
 OP_SYS_INCLUDES += -I${PREFIX}/include
 EOF
 
-cat << EOF >> configure/os/CONFIG_SITE.Common.darwin-x86
-GNU_DIR = \$(or \$(BUILD_PREFIX),$PREFIX)
-CMPLR_PREFIX = x86_64-apple-darwin13.4.0-
-CMPLR_CLASS = clang
-CC = x86_64-apple-darwin13.4.0-clang
-CCC = x86_64-apple-darwin13.4.0-clang++
+cat << EOF >> configure/os/CONFIG_SITE.darwinCommon.darwinCommon
+CC = ${CC}
+CCC = ${CXX}
 
 OP_SYS_CFLAGS += -isysroot \${CONDA_BUILD_SYSROOT} -mmacosx-version-min=\${MACOSX_DEPLOYMENT_TARGET}
 OP_SYS_CXXFLAGS += -isysroot \${CONDA_BUILD_SYSROOT} -mmacosx-version-min=\${MACOSX_DEPLOYMENT_TARGET}
