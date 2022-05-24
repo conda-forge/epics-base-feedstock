@@ -16,7 +16,7 @@ cat << EOF >> configure/os/CONFIG_SITE.Common.linuxCommon
 # Allow to compile without conda-build by installing manually the compilers
 # in a local conda environment
 GNU_DIR = \$(or \$(BUILD_PREFIX),$PREFIX)
-CMPLR_PREFIX=\$(patsubst %-gcc,%-,\${GCC})
+CMPLR_PREFIX=\$(patsubst %-gcc,%-,\$(notdir ${GCC}))
 
 # --disable-new-dtags is required to avoid LD_LIBRARY_PATH overrride RPATH settings
 OP_SYS_LDFLAGS += -Wl,--disable-new-dtags -Wl,-rpath,${PREFIX}/lib -Wl,-rpath-link,${PREFIX}/lib -L${PREFIX}/lib -Wl,-rpath-link,${EPICS_BASE}/lib/${EPICS_HOST_ARCH}
