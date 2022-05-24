@@ -15,7 +15,7 @@ source:
     - force_readline_commandline_library.patch  # [linux]
 
 build:
-  number: 0
+  number: 1
   run_exports:
     - {{ pin_subpackage('epics-base', max_pin='x.x.x.x') }}
 
