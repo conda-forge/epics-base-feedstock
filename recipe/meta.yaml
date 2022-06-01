@@ -1,21 +1,20 @@
-{% set version = "7.0.5" %}
-{% set sha256 = "faf8dd3bfa4a3b0036e8b62a5f647a0596bfd579f31c6cc00b2ce2f82bcf9de1" %}
+{% set version = "7.0.6.1" %}
 
 package:
   name: epics-base
   # Always use 4 numbers in the version to match run_exports!
-  version: {{ version }}.0
+  version: {{ version }}
 
 source:
   fn: base-{{ version }}.tar.gz
   url: https://epics.anl.gov/download/base/base-{{ version }}.tar.gz
-  sha256: {{ sha256 }}
+  sha256: 8ff318f25e2b70df466f933636a2da85e4b0c841504b9e89857652a4786b6387
   patches:
     - CONFIG_COMMON_install_permissions.patch
     - force_readline_commandline_library.patch  # [linux]
 
 build:
-  number: 2
+  number: 0
   run_exports:
     - {{ pin_subpackage('epics-base', max_pin='x.x.x.x') }}
 

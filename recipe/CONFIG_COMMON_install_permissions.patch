@@ -1,8 +1,8 @@
 diff --git a/configure/CONFIG_COMMON b/configure/CONFIG_COMMON
-index fcdadb7bf..e95905e3c 100644
+index 316f971d7..d3a218f65 100644
 --- a/configure/CONFIG_COMMON
 +++ b/configure/CONFIG_COMMON
-@@ -392,10 +392,10 @@ INSTALL_LIB_INSTALLS = $(addprefix $(INSTALL_LIB)/,$(notdir $(LIB_INSTALLS)))
+@@ -404,10 +404,10 @@ INSTALL_LIB_INSTALLS = $(addprefix $(INSTALL_LIB)/,$(notdir $(LIB_INSTALLS)))
  
  #---------------------------------------------------------------
  # Installed file permissions
