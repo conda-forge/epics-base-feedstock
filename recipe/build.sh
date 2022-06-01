@@ -11,6 +11,23 @@ INSTALL_LOCATION=${EPICS_BASE}
 MSI=\$(EPICS_BASE)/bin/\$(EPICS_HOST_ARCH)/msi
 EOF
 
+if [[ "$host_alias" != "$build_alias" ]]
+then
+  echo "CROSS_COMPILER_TARGET_ARCHS=darwin-aarch64" >> configure/CONFIG_SITE
+
+  # To cross-compile for Apple M1, we first have to compile for x86
+  # The readline found is the host one (arm64)
+  # We don't need it here as x86 is only used for compilation
+  # -> we force COMMANDLINE_LIBRARY to EPICS (instead of readline)
+  cat << EOF >> configure/os/CONFIG_SITE.Common.darwin-x86
+CC = ${CC_FOR_BUILD}
+CCC = ${CXX_FOR_BUILD}
+COMMANDLINE_LIBRARY=EPICS
+OP_SYS_LDFLAGS = -Wl,-rpath,\${BUILD_PREFIX}/lib -L\${BUILD_PREFIX}/lib
+OP_SYS_INCLUDES = -I\${BUILD_PREFIX}/include
+EOF
+fi
+
 cat << EOF >> configure/os/CONFIG_SITE.Common.linuxCommon
 # Set GNU_DIR to BUILD_PREFIX or PREFIX if not set (when not using conda-build)
 # Allow to compile without conda-build by installing manually the compilers
@@ -44,8 +61,22 @@ make
 mkdir -p $PREFIX/etc/conda/activate.d
 cat <<EOF > $PREFIX/etc/conda/activate.d/epics-base_activate.sh
 export EPICS_BASE="$EPICS_BASE"
+EOF
+if [[ "$host_alias" != "$build_alias" ]]
+then
+  # When cross-compiling for Apple M1, the perl installed in the host environment will fail to run on the build host.
+  # This is why we fallback to ${BUILD_PREFIX}/bin/perl to set EPICS_HOST_ARCH
+  # EPICS_HOST_ARCH should be set to the build host arch, this is why it's done at activation time.
+  cat <<EOF >> $PREFIX/etc/conda/activate.d/epics-base_activate.sh
+export EPICS_HOST_ARCH="\$(perl ${EPICS_BASE}/lib/perl/EpicsHostArch.pl 2> /dev/null || \${BUILD_PREFIX}/bin/perl ${EPICS_BASE}/lib/perl/EpicsHostArch.pl)"
+EOF
+else
+  cat <<EOF >> $PREFIX/etc/conda/activate.d/epics-base_activate.sh
 export EPICS_HOST_ARCH="$EPICS_HOST_ARCH"
-export EPICS_BASE_HOST_BIN="${EPICS_BASE}/bin/${EPICS_HOST_ARCH}"
+EOF
+fi
+cat <<EOF >> $PREFIX/etc/conda/activate.d/epics-base_activate.sh
+export EPICS_BASE_HOST_BIN="${EPICS_BASE}/bin/\${EPICS_HOST_ARCH}"
 export EPICS_BASE_VERSION="${PKG_VERSION}"
 export PATH=\$EPICS_BASE_HOST_BIN:\$PATH
 EOF
