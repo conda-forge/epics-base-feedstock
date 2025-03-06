@@ -14,7 +14,7 @@ source:
     - CONFIG_COMMON_install_permissions.patch
 
 build:
-  number: 0
+  number: 1
   run_exports:
     - {{ pin_subpackage('epics-base', max_pin='x.x.x.x') }}
 
