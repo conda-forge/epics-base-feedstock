@@ -22,7 +22,7 @@ then
   cat << EOF >> configure/os/CONFIG_SITE.Common.darwin-x86
 CC = ${CC_FOR_BUILD}
 CCC = ${CXX_FOR_BUILD}
-AR = ${build_alias}-ar
+AR = ${build_alias}-ar -rc
 COMMANDLINE_LIBRARY=EPICS
 OP_SYS_LDFLAGS = -Wl,-rpath,\${BUILD_PREFIX}/lib -L\${BUILD_PREFIX}/lib
 OP_SYS_INCLUDES = -I\${BUILD_PREFIX}/include
@@ -44,7 +44,7 @@ EOF
 cat << EOF >> configure/os/CONFIG_SITE.darwinCommon.darwinCommon
 CC = ${CC}
 CCC = ${CXX}
-AR = ${AR}
+AR = ${AR} -rc
 
 OP_SYS_CFLAGS += -isysroot \${CONDA_BUILD_SYSROOT} -mmacosx-version-min=\${MACOSX_DEPLOYMENT_TARGET}
 OP_SYS_CXXFLAGS += -isysroot \${CONDA_BUILD_SYSROOT} -mmacosx-version-min=\${MACOSX_DEPLOYMENT_TARGET}
