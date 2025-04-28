@@ -13,6 +13,7 @@ source:
   patches:
     - CONFIG_COMMON_install_permissions.patch
     - libCom_epicsThread_std_unexpected.patch
+    - RULES_MODULES_echo_quotes.patch
 
 build:
   number: 0
