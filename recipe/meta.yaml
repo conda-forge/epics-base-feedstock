@@ -1,6 +1,6 @@
 # Always use 4 numbers in the version to match run_exports!
 # Add .0 if official version is on 3 numbers
-{% set version = "7.0.7.0" %}
+{% set version = "7.0.8.1" %}
 
 package:
   name: epics-base
@@ -8,10 +8,12 @@ package:
 
 source:
   # Don't use {{ version }} in the url as it can be on 3 numbers only
-  url: https://epics.anl.gov/download/base/base-7.0.7.tar.gz
-  sha256: 44d6980e19c7ad097b9e3d20c3401fb20699ed346afc307c8d1b44cf7109d475
+  url: https://epics-controls.org/download/base/base-7.0.8.1.tar.gz
+  sha256: 6c93a5e09b21392adbb3de423605d428ee4ddb1272fc708a251b082272fa73f5
   patches:
     - CONFIG_COMMON_install_permissions.patch
+    - libCom_epicsThread_std_unexpected.patch
+    - RULES_MODULES_echo_quotes.patch
 
 build:
   number: 0
@@ -21,6 +23,7 @@ build:
 requirements:
   build:
     - {{ compiler('c') }}
+    - {{ stdlib("c") }}
     - {{ compiler('cxx') }}
     - make
     - perl
@@ -101,3 +104,5 @@ extra:
     - beenje
     - mrakitin
     - tacaswell
+    - aharrisson
+    - simon-ess
