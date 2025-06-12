@@ -40,6 +40,9 @@ CMPLR_PREFIX=\$(patsubst %-gcc,%-,\$(notdir ${GCC}))
 # --disable-new-dtags is required to avoid LD_LIBRARY_PATH overrride RPATH settings
 OP_SYS_LDFLAGS += -Wl,--disable-new-dtags -Wl,-rpath,${PREFIX}/lib -Wl,-rpath-link,${PREFIX}/lib -L${PREFIX}/lib -Wl,-rpath-link,${EPICS_BASE}/lib/${EPICS_HOST_ARCH}
 OP_SYS_INCLUDES += -I${PREFIX}/include
+
+# Create static builds for the epics-client-tools subpackage
+STATIC_BUILD=YES
 EOF
 
 cat << EOF >> configure/os/CONFIG_SITE.darwinCommon.darwinCommon
