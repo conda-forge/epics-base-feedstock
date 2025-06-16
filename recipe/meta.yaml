@@ -90,34 +90,46 @@ outputs:
         - test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libca.a   # [not win]
         - test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libCom.a  # [not win]
 
-  - name: epics-client-tools                              # [linux]
-    requirements:                                         # [linux]
-      run:                                                # [linux]
-        - {{ pin_subpackage('epics-base', exact=True) }}  # [linux]
-    files:                                                # [linux]
-      - etc                                               # [linux]
-      - epics/bin/*/caget                                 # [linux]
-      - epics/bin/*/camonitor                             # [linux]
-      - epics/bin/*/caput                                 # [linux]
-      - epics/bin/*/cainfo                                # [linux]
-      - epics/bin/*/pvget                                 # [linux]
-      - epics/bin/*/pvmonitor                             # [linux]
-      - epics/bin/*/pvput                                 # [linux]
-      - epics/bin/*/pvinfo                                # [linux]
-      - epics/bin/*/pvlist                                # [linux]
-      - epics/bin/*/pvcall                                # [linux]
-    test:                                                 # [linux]
-      commands:                                           # [linux]
-        - caget -h                                        # [linux]
-        - cainfo -h                                       # [linux]
-        - caput -h                                        # [linux]
-        - camonitor -h                                    # [linux]
-        - pvget -h                                        # [linux]
-        - pvmonitor -h                                    # [linux]
-        - pvput -h                                        # [linux]
-        - pvinfo -h                                       # [linux]
-        - pvlist -h                                       # [linux]
-        - pvcall -h                                       # [linux]
+  - name: epics-client-tools
+    files:
+      - etc
+      - epics/lib/*/libca.so*              # [linux]
+      - epics/lib/*/libCom.so*             # [linux]
+      - epics/lib/*/libpvData.so*          # [linux]
+      - epics/lib/*/libpvAccess.so*        # [linux]
+      - epics/lib/*/libpvAccessCA.so*      # [linux]
+      - epics/lib/*/libca.*.dylib          # [osx]
+      - epics/lib/*/libCom.*.dylib         # [osx]
+      - epics/lib/*/libpvData.*.dylib      # [osx]
+      - epics/lib/*/libpvAccess.*.dylib    # [osx]
+      - epics/lib/*/libpvAccessCA.*.dylib  # [osx]
+      - epics/bin/*/libca.dll*             # [win]
+      - epics/bin/*/libCom.dll*            # [win]
+      - epics/bin/*/libpvData.dll*         # [win]
+      - epics/bin/*/libpvAccess.dll*       # [win]
+      - epics/bin/*/libpvAccessCA.dll*     # [win]
+      - epics/bin/*/caget
+      - epics/bin/*/camonitor
+      - epics/bin/*/caput
+      - epics/bin/*/cainfo
+      - epics/bin/*/pvget
+      - epics/bin/*/pvmonitor
+      - epics/bin/*/pvput
+      - epics/bin/*/pvinfo
+      - epics/bin/*/pvlist
+      - epics/bin/*/pvcall
+    test:
+      commands:
+        - caget -h
+        - cainfo -h
+        - caput -h
+        - camonitor -h
+        - pvget -h
+        - pvmonitor -h
+        - pvput -h
+        - pvinfo -h
+        - pvlist -h
+        - pvcall -h
 
 
 about:
