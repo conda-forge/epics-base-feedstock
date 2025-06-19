@@ -91,6 +91,9 @@ outputs:
         - test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libCom.a  # [not win]
 
   - name: epics-client-tools
+    requirements:
+      run:
+        - {{ stdlib('cxx') }}
     files:
       - etc
       - epics/lib/*/libca.so*              # [linux]
