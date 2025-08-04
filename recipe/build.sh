@@ -55,8 +55,7 @@ OP_SYS_INCLUDES += -I${PREFIX}/include
 EOF
 
 # Compile epics-base
-# Build fails when using -j${CPU_COUNT} (at least with 7.0.2.1)
-make
+make -j${CPU_COUNT}
 
 # Create files to set/unset variables when running
 # activate/deactivate
