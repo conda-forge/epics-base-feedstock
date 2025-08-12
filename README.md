@@ -185,6 +185,7 @@ Feedstock Maintainers
 =====================
 
 * [@aharrisson](https://github.com/aharrisson/)
+* [@anderslindho](https://github.com/anderslindho/)
 * [@beenje](https://github.com/beenje/)
 * [@lucmaga](https://github.com/lucmaga/)
 * [@mrakitin](https://github.com/mrakitin/)
