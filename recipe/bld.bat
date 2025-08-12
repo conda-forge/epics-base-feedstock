@@ -12,4 +12,4 @@ copy %RECIPE_DIR%\pre-build.py %SRC_DIR%
 python pre-build.py
 
 echo Building at %CD%
-make
+make -j %CPU_COUNT%
