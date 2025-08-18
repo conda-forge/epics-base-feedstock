@@ -12,9 +12,10 @@ source:
   sha256: acd62c9b97b60caea9303cc3aab922dbf2bc3bfb3d20e0027110ffe4c906a6c7
   patches:
     - RULES_MODULES_echo_quotes.patch
+    - RULES_BUILD_remove_mkdir.patch
 
 build:
-  number: 2
+  number: 3
   run_exports:
     - {{ pin_subpackage('epics-base', max_pin='x.x.x.x') }}
 
