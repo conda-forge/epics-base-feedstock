@@ -17,3 +17,9 @@ if errorlevel 1 (
     echo MAKE FAILED
     exit /b 1
 )
+
+make -j %CPU_COUNT% runtests
+if errorlevel 1 (
+    echo MAKE FAILED
+    exit /b 1
+)

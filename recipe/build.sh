@@ -57,6 +57,9 @@ EOF
 # Compile epics-base
 make -j${CPU_COUNT}
 
+# run epics-base tests
+make -j${CPU_COUNT} runtests
+
 # Create files to set/unset variables when running
 # activate/deactivate
 
