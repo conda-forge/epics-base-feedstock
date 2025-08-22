@@ -57,6 +57,11 @@ EOF
 # Compile epics-base
 make -j${CPU_COUNT}
 
+# run epics-base tests
+if [[ "$target_platform" == linux-* ]]; then
+  make -j${CPU_COUNT} runtests
+fi
+
 # Create files to set/unset variables when running
 # activate/deactivate
 
