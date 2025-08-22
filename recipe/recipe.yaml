@@ -17,9 +17,10 @@ source:
     - RULES_MODULES_echo_quotes.patch
     - RULES_BUILD_remove_mkdir.patch
     - initialise_pthreadInfo_attr.patch
+    - test_dbtemplate_fix_relative_path_tests.patch
 
 build:
-  number: 7
+  number: 8
 
 outputs:
   - package:
