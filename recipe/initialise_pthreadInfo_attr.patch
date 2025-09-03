@@ -1,0 +1,13 @@
+diff --git a/modules/libcom/src/osi/os/posix/osdThread.c b/modules/libcom/src/osi/os/posix/osdThread.c
+index e9ea2dfbc..5a7f6f307 100644
+--- a/modules/libcom/src/osi/os/posix/osdThread.c
++++ b/modules/libcom/src/osi/os/posix/osdThread.c
+@@ -665,6 +665,8 @@ static epicsThreadOSD *createImplicit(void)
+     assert(pthreadInfo);
+     pthreadInfo->tid = tid;
+     pthreadInfo->osiPriority = 0;
++    status = pthread_attr_init(&pthreadInfo->attr);
++    checkStatusOnce(status,"pthread_attr_init");
+ 
+ #if defined(_POSIX_THREAD_PRIORITY_SCHEDULING) && _POSIX_THREAD_PRIORITY_SCHEDULING > 0
+     if(pthread_getschedparam(tid,&pthreadInfo->schedPolicy,&pthreadInfo->schedParam) == 0) {
