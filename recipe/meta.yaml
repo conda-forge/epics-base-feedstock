@@ -13,9 +13,10 @@ source:
   patches:
     - RULES_MODULES_echo_quotes.patch
     - RULES_BUILD_remove_mkdir.patch
+    - initialise_pthreadInfo_attr.patch
 
 build:
-  number: 3
+  number: 4
   run_exports:
     - {{ pin_subpackage('epics-base', max_pin='x.x.x.x') }}
 
