@@ -16,7 +16,7 @@ source:
     - initialise_pthreadInfo_attr.patch
 
 build:
-  number: 4
+  number: 5
   run_exports:
     - {{ pin_subpackage('epics-base', max_pin='x.x.x.x') }}
 
