@@ -20,8 +20,5 @@ if errorlevel 1 (
     exit /b 1
 )
 
-mkdir "%PREFIX%\Library\bin" >nul
-mkdir "%PREFIX%\Library\lib" >nul
-
-copy "%EPICS_BASE%\bin\%EPICS_HOST_ARCH%\*.dll" "%PREFIX%\Library\bin\" >nul
-copy "%EPICS_BASE%\lib\%EPICS_HOST_ARCH%\*.lib" "%PREFIX%\Library\lib\" >nul
+xcopy "%EPICS_BASE%\bin\%EPICS_HOST_ARCH%\*.dll" "%PREFIX%\Library\bin\" /Y
+xcopy "%EPICS_BASE%\lib\%EPICS_HOST_ARCH%\*.lib" "%PREFIX%\Library\lib\" /Y
