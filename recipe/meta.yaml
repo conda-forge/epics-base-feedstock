@@ -61,6 +61,8 @@ test:
     - if not exist %EPICS_BASE%\include\epicsVersion.h exit 1           # [win]
     - if not exist %EPICS_BASE%\lib\%EPICS_HOST_ARCH%\ca.lib exit 1     # [win]
     - if not exist %EPICS_BASE%\lib\%EPICS_HOST_ARCH%\Com.lib exit 1    # [win]
+    - if not exist %PREFIX%\Library\bin\Com.dll exit 1                  # [win]
+    - if not exist %PREFIX%\Library\lib\Com.lib exit 1                  # [win]
 
 outputs:
   - name: epics-base
@@ -74,7 +76,10 @@ outputs:
       - epics/html
       - epics/include
       # windows .dll are under bin
+      - epics/bin/*/*.dll    # [win]
       - epics/lib/*/*.lib    # [win]
+      - Library/lib/*.lib    # [win]
+      - Library/bin/*.dll    # [win]
       - epics/lib/*/*.dylib  # [osx]
       - epics/lib/*/*.so*    # [linux]
       - epics/lib/perl
