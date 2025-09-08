@@ -28,8 +28,6 @@ requirements:
     - make
     - perl
     - m2-patch      # [win]
-    # To run pre-build.py
-    - python >=3.6  # [win]
   host:
     - readline      # [unix]
   run:
