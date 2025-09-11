@@ -19,7 +19,7 @@ source:
     - initialise_pthreadInfo_attr.patch
 
 build:
-  number: 6
+  number: 7
 
 outputs:
   - package:
