@@ -128,7 +128,7 @@ outputs:
       run_exports:
         - ${{ pin_subpackage('epics-base', upper_bound='x.x.x.x') }}
     build:
-      files:  # [not win]
+      files:
         - if: not win
           then: epics/lib/*/*.a
     tests:
@@ -153,4 +153,3 @@ extra:
     - tacaswell
     - aharrisson
     - simon-ess
-
