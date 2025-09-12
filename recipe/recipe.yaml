@@ -52,13 +52,11 @@ outputs:
         - epics/include
         # windows .dll are under bin
         - if: win
-          then: epics/bin/*/*.dll
-        - if: win
-          then: epics/lib/*/*.lib
-        - if: win
-          then: Library/lib/*.lib
-        - if: win
-          then: Library/bin/*.dll
+          then:
+            - epics/bin/*/*.dll
+            - epics/lib/*/*.lib
+            - Library/lib/*.lib
+            - Library/bin/*.dll
         - if: osx
           then: epics/lib/*/*.dylib
         - if: linux
@@ -67,10 +65,7 @@ outputs:
         - epics/lib/pkgconfig
         - epics/templates
     tests:
-      - files:
-          source:
-            - modules/pva2pva/loopback.conf
-        script:
+      - script:
           - caget -h
           - cainfo -h
           - caput -h
@@ -83,29 +78,24 @@ outputs:
           - softIocPVA -h
           - p2p -C modules/pva2pva/loopback.conf
           - if: not win
-            then: test -f ${EPICS_BASE}/bin/${EPICS_HOST_ARCH}/caget
-          - if: not win
-            then: test -f ${EPICS_BASE}/include/epicsVersion.h
-          - if: not win
-            then: test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libCom${SHLIB_EXT}
-          - if: not win
-            then: test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libca${SHLIB_EXT}
+            then:
+              - test -f ${EPICS_BASE}/bin/${EPICS_HOST_ARCH}/caget
+              - test -f ${EPICS_BASE}/include/epicsVersion.h
+              - test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libCom${SHLIB_EXT}
+              - test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libca${SHLIB_EXT}
           - if: win
-            then: if not exist %EPICS_BASE%\bin\%EPICS_HOST_ARCH%\caget.exe exit 1
-          - if: win
-            then: if not exist %EPICS_BASE%\bin\%EPICS_HOST_ARCH%\Com.dll exit 1
-          - if: win
-            then: if not exist %EPICS_BASE%\bin\%EPICS_HOST_ARCH%\ca.dll exit 1
-          - if: win
-            then: if not exist %EPICS_BASE%\include\epicsVersion.h exit 1
-          - if: win
-            then: if not exist %EPICS_BASE%\lib\%EPICS_HOST_ARCH%\ca.lib exit 1
-          - if: win
-            then: if not exist %EPICS_BASE%\lib\%EPICS_HOST_ARCH%\Com.lib exit 1
-          - if: win
-            then: if not exist %PREFIX%\Library\bin\Com.dll exit 1
-          - if: win
-            then: if not exist %PREFIX%\Library\lib\Com.lib exit 1
+            then:
+              - if not exist %EPICS_BASE%\bin\%EPICS_HOST_ARCH%\caget.exe exit 1
+              - if not exist %EPICS_BASE%\bin\%EPICS_HOST_ARCH%\Com.dll exit 1
+              - if not exist %EPICS_BASE%\bin\%EPICS_HOST_ARCH%\ca.dll exit 1
+              - if not exist %EPICS_BASE%\include\epicsVersion.h exit 1
+              - if not exist %EPICS_BASE%\lib\%EPICS_HOST_ARCH%\ca.lib exit 1
+              - if not exist %EPICS_BASE%\lib\%EPICS_HOST_ARCH%\Com.lib exit 1
+              - if not exist %PREFIX%\Library\bin\Com.dll exit 1
+              - if not exist %PREFIX%\Library\lib\Com.lib exit 1
+        files:
+          source:
+            - modules/pva2pva/loopback.conf
 
   - package:
       name: epics-base-static-libs
