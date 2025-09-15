@@ -1,0 +1,145 @@
+# Always use 4 numbers in the version to match run_exports!
+# Add .0 if official version is on 3 numbers
+schema_version: 1
+
+context:
+  version: 7.0.9.0
+
+recipe:
+  name: epics-base
+  version: ${{ version }}
+
+source:
+  # Don't use {{ version }} in the url as it can be on 3 numbers only
+  url: https://epics-controls.org/download/base/base-7.0.9.tar.gz
+  sha256: acd62c9b97b60caea9303cc3aab922dbf2bc3bfb3d20e0027110ffe4c906a6c7
+  patches:
+    - RULES_MODULES_echo_quotes.patch
+    - RULES_BUILD_remove_mkdir.patch
+    - initialise_pthreadInfo_attr.patch
+
+build:
+  number: 7
+
+outputs:
+  - package:
+      name: epics-base
+    requirements:
+      build:
+        - ${{ compiler('c') }}
+        - ${{ stdlib("c") }}
+        - ${{ compiler('cxx') }}
+        - make
+        - perl
+        - if: win
+          then: m2-patch
+      host:
+        - if: unix
+          then: readline
+      run:
+        - perl
+      run_exports:
+        - ${{ pin_subpackage('epics-base', upper_bound='x.x.x.x') }}
+    build:
+      files:
+        - etc
+        - epics/bin
+        - epics/cfg
+        - epics/configure
+        - epics/db
+        - epics/dbd
+        - epics/html
+        - epics/include
+        # windows .dll are under bin
+        - if: win
+          then:
+            - epics/bin/*/*.dll
+            - epics/lib/*/*.lib
+            - Library/lib/*.lib
+            - Library/bin/*.dll
+        - if: osx
+          then: epics/lib/*/*.dylib
+        - if: linux
+          then: epics/lib/*/*.so*
+        - epics/lib/perl
+        - epics/lib/pkgconfig
+        - epics/templates
+    tests:
+      - script:
+          - caget -h
+          - cainfo -h
+          - caput -h
+          - camonitor -h
+          - pvget -h
+          - pvput -h
+          - pvinfo -h
+          - pvlist -h
+          - softIoc -h
+          - softIocPVA -h
+          - p2p -C modules/pva2pva/loopback.conf
+          - if: not win
+            then:
+              - test -f ${EPICS_BASE}/bin/${EPICS_HOST_ARCH}/caget
+              - test -f ${EPICS_BASE}/include/epicsVersion.h
+              - test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libCom${SHLIB_EXT}
+              - test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libca${SHLIB_EXT}
+          - if: win
+            then:
+              - if not exist %EPICS_BASE%\bin\%EPICS_HOST_ARCH%\caget.exe exit 1
+              - if not exist %EPICS_BASE%\bin\%EPICS_HOST_ARCH%\Com.dll exit 1
+              - if not exist %EPICS_BASE%\bin\%EPICS_HOST_ARCH%\ca.dll exit 1
+              - if not exist %EPICS_BASE%\include\epicsVersion.h exit 1
+              - if not exist %EPICS_BASE%\lib\%EPICS_HOST_ARCH%\ca.lib exit 1
+              - if not exist %EPICS_BASE%\lib\%EPICS_HOST_ARCH%\Com.lib exit 1
+              - if not exist %PREFIX%\Library\bin\Com.dll exit 1
+              - if not exist %PREFIX%\Library\lib\Com.lib exit 1
+        files:
+          source:
+            - modules/pva2pva/loopback.conf
+
+  - package:
+      name: epics-base-static-libs
+    requirements:
+      build:
+        - ${{ compiler('c') }}
+        - ${{ stdlib("c") }}
+        - ${{ compiler('cxx') }}
+        - make
+        - perl
+        - if: win
+          then: m2-patch
+      host:
+        - if: unix
+          then: readline
+      run:
+        - if: not win
+          then: ${{ pin_subpackage('epics-base', exact=True) }}
+        - perl
+      run_exports:
+        - ${{ pin_subpackage('epics-base', upper_bound='x.x.x.x') }}
+    build:
+      files:
+        - if: not win
+          then: epics/lib/*/*.a
+    tests:
+      - script:
+          - if: not win
+            then: test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libca.a
+          - if: not win
+            then: test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libCom.a
+
+about:
+  license: EPICS
+  license_file: LICENSE
+  summary: EPICS Base Library
+  homepage: http://www.aps.anl.gov/epics
+
+extra:
+  recipe-maintainers:
+    - anderslindho
+    - lucmaga
+    - beenje
+    - mrakitin
+    - tacaswell
+    - aharrisson
+    - simon-ess
