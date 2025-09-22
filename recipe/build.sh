@@ -58,9 +58,7 @@ EOF
 make -j${CPU_COUNT}
 
 # run epics-base tests
-if [ "${PKG_NAME}" != "epics-base-static-libs" ]; then
-  [[ "$target_platform" == linux-* ]] && make -j${CPU_COUNT} runtests
-fi
+[[ ${PKG_NAME} != "epics-base-static-libs" && "$target_platform" == linux-* ]] &&  make -j${CPU_COUNT} runtests
 
 # Create files to set/unset variables when running
 # activate/deactivate
