@@ -31,6 +31,8 @@ EOF
 fi
 
 cat << EOF >> configure/os/CONFIG_SITE.Common.linuxCommon
+# GCC15 defaults to gnu23 but EPICS ecosystem needs gnu17
+POSIX_CFLAGS += -std=gnu17
 # Set GNU_DIR to BUILD_PREFIX or PREFIX if not set (when not using conda-build)
 # Allow to compile without conda-build by installing manually the compilers
 # in a local conda environment
@@ -48,6 +50,8 @@ CCC = ${CXX}
 AR = ${AR} -rc
 RANLIB = ${RANLIB}
 
+# GCC15 defaults to gnu23 but EPICS ecosystem needs gnu17
+POSIX_CFLAGS += -std=gnu17
 OP_SYS_CFLAGS += -isysroot \${CONDA_BUILD_SYSROOT} -mmacosx-version-min=\${MACOSX_DEPLOYMENT_TARGET}
 OP_SYS_CXXFLAGS += -isysroot \${CONDA_BUILD_SYSROOT} -mmacosx-version-min=\${MACOSX_DEPLOYMENT_TARGET}
 OP_SYS_LDFLAGS += -Wl,-rpath,${PREFIX}/lib -L${PREFIX}/lib
