@@ -18,9 +18,10 @@ source:
     - RULES_BUILD_remove_mkdir.patch
     - initialise_pthreadInfo_attr.patch
     - test_dbtemplate_fix_relative_path_tests.patch
+    - increase_default_errlog_size.patch
 
 build:
-  number: 9
+  number: 10
 
 outputs:
   - package:
