@@ -11,7 +11,7 @@ recipe:
 
 source:
   # Don't use {{ version }} in the url as it can be on 3 numbers only
-  url: https://epics-controls.org/download/base/base-7.0.9.tar.gz
+  url: https://github.com/epics-base/${{ name }}/archive/refs/tags/7.0.9.tar.gz
   sha256: acd62c9b97b60caea9303cc3aab922dbf2bc3bfb3d20e0027110ffe4c906a6c7
   patches:
     - RULES_MODULES_echo_quotes.patch
@@ -21,7 +21,7 @@ source:
     - increase_default_errlog_size.patch
 
 build:
-  number: 10
+  number: 11
 
 outputs:
   - package:
