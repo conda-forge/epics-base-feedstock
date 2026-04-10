@@ -21,7 +21,7 @@ source:
     - increase_default_errlog_size.patch
 
 build:
-  number: 10
+  number: 11
 
 outputs:
   - package:
@@ -35,6 +35,8 @@ outputs:
         - perl
         - if: win
           then: m2-patch
+        - if: unix
+          then: readline
       host:
         - if: unix
           then: readline
@@ -110,6 +112,8 @@ outputs:
         - perl
         - if: win
           then: m2-patch
+        - if: unix
+          then: readline
       host:
         - if: unix
           then: readline

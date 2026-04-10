@@ -11,15 +11,15 @@ INSTALL_LOCATION=${EPICS_BASE}
 MSI=\$(EPICS_BASE)/bin/\$(EPICS_HOST_ARCH)/msi
 EOF
 
-if [[ "$host_alias" != "$build_alias" ]]
-then
-  echo "CROSS_COMPILER_TARGET_ARCHS=darwin-aarch64" >> configure/CONFIG_SITE
+if [[ "$host_alias" != "$build_alias" ]]; then
+  if [[ "$target_platform" != "linux-aarch64" ]]; then
+    echo "CROSS_COMPILER_TARGET_ARCHS=darwin-aarch64" >> configure/CONFIG_SITE
 
-  # To cross-compile for Apple M1, we first have to compile for x86
-  # The readline found is the host one (arm64)
-  # We don't need it here as x86 is only used for compilation
-  # -> we force COMMANDLINE_LIBRARY to EPICS (instead of readline)
-  cat << EOF >> configure/os/CONFIG_SITE.Common.darwin-x86
+    # To cross-compile for Apple M1, we first have to compile for x86
+    # The readline found is the host one (arm64)
+    # We don't need it here as x86 is only used for compilation
+    # -> we force COMMANDLINE_LIBRARY to EPICS (instead of readline)
+    cat << EOF >> configure/os/CONFIG_SITE.Common.darwin-x86
 CC = ${CC_FOR_BUILD}
 CCC = ${CXX_FOR_BUILD}
 AR = ${build_alias}-ar -rc
@@ -28,6 +28,34 @@ COMMANDLINE_LIBRARY=EPICS
 OP_SYS_LDFLAGS = -Wl,-rpath,\${BUILD_PREFIX}/lib -L\${BUILD_PREFIX}/lib
 OP_SYS_INCLUDES = -I\${BUILD_PREFIX}/include
 EOF
+  else
+    echo "CROSS_COMPILER_TARGET_ARCHS=linux-aarch64" >> configure/CONFIG_SITE
+
+    # Host tools must use the native build-host compiler.
+    # READLINE_DIR must point to BUILD_PREFIX so the x86_64 host linker finds the
+    # x86_64 readline (from build: deps) rather than the aarch64 one in PREFIX.
+    cat << EOF >> configure/os/CONFIG_SITE.linux-x86_64.linux-x86_64
+CC = ${CC_FOR_BUILD}
+CCC = ${CXX_FOR_BUILD}
+AR = ${build_alias}-ar -rc
+RANLIB = ${build_alias}-ranlib
+READLINE_DIR = ${BUILD_PREFIX}
+EOF
+    # READLINE_DIR must point to PREFIX where the aarch64 readline is installed.
+    cat << EOF >> configure/os/CONFIG_SITE.linux-x86_64.linux-aarch64
+CC = ${CC}
+CCC = ${CXX}
+AR = ${AR} -rc
+RANLIB = ${RANLIB}
+STATIC_BUILD=NO
+SHARED_LIBRARIES=YES
+VALID_BUILDS=Host Ioc Command
+READLINE_DIR = ${PREFIX}
+EOF
+    # Perl 5.32 references xlocale.h which was removed in glibc 2.26+
+    # Remove when https://github.com/conda-forge/perl-feedstock/issues/28 is solved
+    echo '#include <locale.h>' > "$BUILD_PREFIX/include/xlocale.h"
+  fi
 fi
 
 cat << EOF >> configure/os/CONFIG_SITE.Common.linuxCommon
@@ -72,8 +100,7 @@ mkdir -p $PREFIX/etc/conda/activate.d
 cat <<EOF > $PREFIX/etc/conda/activate.d/epics-base_activate.sh
 export EPICS_BASE="$EPICS_BASE"
 EOF
-if [[ "$host_alias" != "$build_alias" ]]
-then
+if [[ "$host_alias" != "$build_alias" ]]; then
   # When cross-compiling for Apple M1, the perl installed in the host environment will fail to run on the build host.
   # This is why we fallback to ${BUILD_PREFIX}/bin/perl to set EPICS_HOST_ARCH
   # EPICS_HOST_ARCH should be set to the build host arch, this is why it's done at activation time.
