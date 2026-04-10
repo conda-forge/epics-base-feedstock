@@ -21,7 +21,7 @@ source:
     - increase_default_errlog_size.patch
 
 build:
-  number: 10
+  number: 11
 
 outputs:
   - package:
