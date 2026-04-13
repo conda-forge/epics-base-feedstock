@@ -35,10 +35,6 @@ outputs:
         - perl
         - if: win
           then: m2-patch
-        # Only needed when cross-compiling: provides a native readline in BUILD_PREFIX
-        # so host build tools (x86_64) don't pick up the incompatible target readline.
-        - if: unix and build_platform != target_platform
-          then: readline
       host:
         - if: unix
           then: readline
@@ -114,8 +110,6 @@ outputs:
         - perl
         - if: win
           then: m2-patch
-        - if: unix and build_platform != target_platform
-          then: readline
       host:
         - if: unix
           then: readline
