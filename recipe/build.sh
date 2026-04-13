@@ -43,7 +43,6 @@ RANLIB = ${build_alias}-ranlib
 OP_SYS_LDFLAGS += -L${BUILD_PREFIX}/lib -Wl,-rpath,${BUILD_PREFIX}/lib -Wl,-rpath-link,${BUILD_PREFIX}/lib
 OP_SYS_INCLUDES += -I${BUILD_PREFIX}/include
 EOF
-    # READLINE_DIR must point to PREFIX where the aarch64 readline is installed.
     cat << EOF >> configure/os/CONFIG_SITE.linux-x86_64.linux-aarch64
 CC = ${CC}
 CCC = ${CXX}
@@ -52,7 +51,6 @@ RANLIB = ${RANLIB}
 STATIC_BUILD=NO
 SHARED_LIBRARIES=YES
 VALID_BUILDS=Host Ioc Command
-READLINE_DIR = ${PREFIX}
 EOF
     # Perl 5.32 references xlocale.h which was removed in glibc 2.26+
     # Remove when https://github.com/conda-forge/perl-feedstock/issues/28 is solved
