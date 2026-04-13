@@ -32,14 +32,16 @@ EOF
     echo "CROSS_COMPILER_TARGET_ARCHS=linux-aarch64" >> configure/CONFIG_SITE
 
     # Host tools must use the native build-host compiler.
-    # READLINE_DIR must point to BUILD_PREFIX so the x86_64 host linker finds the
-    # x86_64 readline (from build: deps) rather than the aarch64 one in PREFIX.
+    # OP_SYS_LDFLAGS must include BUILD_PREFIX so the x86_64 host linker finds the
+    # x86_64 readline (from build: deps) and can resolve transitive deps against it.
+    # Without this, only PREFIX/lib is searched which contains aarch64-incompatible libs.
     cat << EOF >> configure/os/CONFIG_SITE.linux-x86_64.linux-x86_64
 CC = ${CC_FOR_BUILD}
 CCC = ${CXX_FOR_BUILD}
 AR = ${build_alias}-ar -rc
 RANLIB = ${build_alias}-ranlib
-READLINE_DIR = ${BUILD_PREFIX}
+OP_SYS_LDFLAGS += -L${BUILD_PREFIX}/lib -Wl,-rpath,${BUILD_PREFIX}/lib -Wl,-rpath-link,${BUILD_PREFIX}/lib
+OP_SYS_INCLUDES += -I${BUILD_PREFIX}/include
 EOF
     # READLINE_DIR must point to PREFIX where the aarch64 readline is installed.
     cat << EOF >> configure/os/CONFIG_SITE.linux-x86_64.linux-aarch64
