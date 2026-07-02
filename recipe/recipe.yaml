@@ -43,6 +43,7 @@ outputs:
       run_exports:
         - ${{ pin_subpackage('epics-base', upper_bound='x.x.x.x') }}
     build:
+      script: build
       files:
         - etc
         - epics/bin
@@ -120,6 +121,7 @@ outputs:
       run_exports:
         - ${{ pin_subpackage('epics-base', upper_bound='x.x.x.x') }}
     build:
+      script: build
       files:
         - if: not win
           then: epics/lib/*/*.a
