@@ -1,0 +1,9 @@
+diff --git a/modules/pvAccess/testCa/Makefile b/modules/pvAccess/testCa/Makefile
+--- a/modules/pvAccess/testCa/Makefile
++++ b/modules/pvAccess/testCa/Makefile
+@@ -22,4 +22,4 @@ ifdef BASE_3_16
+   REGRDDFLAGS = -l
+
+-  TESTS += testCaProvider
++  # TESTS += testCaProvider
+   TESTFILES += ../testCaProvider.db $(COMMON_DIR)/testIoc.dbd

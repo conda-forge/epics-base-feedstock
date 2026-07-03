@@ -17,6 +17,12 @@ if errorlevel 1 (
     exit /b 1
 )
 
+make -j %CPU_COUNT% runtests
+if errorlevel 1 (
+    echo RUNTESTS FAILED
+    exit /b 1
+)
+
 xcopy "%EPICS_BASE%\bin\%EPICS_HOST_ARCH%\*.dll" "%PREFIX%\Library\bin\" /Y
 xcopy "%EPICS_BASE%\lib\%EPICS_HOST_ARCH%\*.lib" "%PREFIX%\Library\lib\" /Y
 
