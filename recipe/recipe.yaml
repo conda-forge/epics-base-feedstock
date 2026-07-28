@@ -28,8 +28,12 @@ build:
   number: 12
 
 outputs:
-  - package:
-      name: epics-base
+  # Staging output: builds EPICS once; the package outputs below select their
+  # files from this build via `inherit`. Run exports from the staging
+  # dependencies (libgcc, libstdcxx, readline) are appended to the inheriting
+  # outputs automatically.
+  - staging:
+      name: epics-base-staging
     requirements:
       build:
         - ${{ compiler('c') }}
@@ -42,12 +46,18 @@ outputs:
       host:
         - if: unix
           then: readline
+    build:
+      script: build
+
+  - package:
+      name: epics-base
+    inherit: epics-base-staging
+    requirements:
       run:
         - perl
       run_exports:
         - ${{ pin_subpackage('epics-base', upper_bound='x.x.x.x') }}
     build:
-      script: build
       files:
         - etc
         - epics/bin
@@ -106,18 +116,8 @@ outputs:
 
   - package:
       name: epics-base-static-libs
+    inherit: epics-base-staging
     requirements:
-      build:
-        - ${{ compiler('c') }}
-        - ${{ stdlib("c") }}
-        - ${{ compiler('cxx') }}
-        - make
-        - perl
-        - if: win
-          then: m2-patch
-      host:
-        - if: unix
-          then: readline
       run:
         - if: not win
           then: ${{ pin_subpackage('epics-base', exact=True) }}
@@ -125,7 +125,6 @@ outputs:
       run_exports:
         - ${{ pin_subpackage('epics-base', upper_bound='x.x.x.x') }}
     build:
-      script: build
       files:
         - if: not win
           then: epics/lib/*/*.a

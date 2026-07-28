@@ -98,8 +98,9 @@ make -j${CPU_COUNT}
 # Relax timer accuracy tolerances on macOS as CI runners seem to struggle keeping up
 [[ "$target_platform" == osx-* ]] && export EPICS_TEST_IMPRECISE_TIMING=YES
 
-# run epics-base tests
-[[ ${PKG_NAME} != "epics-base-static-libs" ]] &&  make -j${CPU_COUNT} runtests
+# run epics-base tests (the staging build runs only once, so no need to guard
+# against re-running the test suite per output)
+make -j${CPU_COUNT} runtests
 
 # Create files to set/unset variables when running
 # activate/deactivate
