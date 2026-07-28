@@ -4,7 +4,7 @@ schema_version: 1
 
 context:
   name: epics-base
-  version: 7.0.9.0
+  version: 7.0.10.0
 
 recipe:
   name: ${{ name }}
@@ -12,20 +12,17 @@ recipe:
 
 source:
   # The recipe version always carries 4 numbers to match run_exports, while
-  # upstream omits a zero patch level from release names (7.0.9, not 7.0.9.0)
+  # upstream omits a zero patch level from release names (x.y.z, not x.y.z.0)
   # - so don't template the version into the URL.
   # Upstream's release asset bundles the submodules, unlike the auto-generated
   # tag archive.
   # Prefer the GitHub release asset over epics-controls.org: GH can re-cut
   # assets after the initial publish, while epics-controls keeps the first
   # cut and will then fail the recorded sha256 (useless as a mirror).
-  url: https://github.com/epics-base/${{ name }}/releases/download/R7.0.9/base-7.0.9.tar.gz
-  sha256: acd62c9b97b60caea9303cc3aab922dbf2bc3bfb3d20e0027110ffe4c906a6c7
+  url: https://github.com/epics-base/${{ name }}/releases/download/R7.0.10/base-7.0.10.tar.gz
+  sha256: 44193e962793de514ead442e9b5096a13109f1ee275f131995826468aa89b839
   patches:
-    - RULES_MODULES_echo_quotes.patch
     - RULES_BUILD_remove_mkdir.patch
-    - initialise_pthreadInfo_attr.patch
-    - test_dbtemplate_fix_relative_path_tests.patch
     - increase_default_errlog_size.patch
     - if: win
       then:
@@ -33,7 +30,7 @@ source:
         - skip_testCaProvider_on_windows.patch
 
 build:
-  number: 13
+  number: 0
 
 outputs:
   - package:

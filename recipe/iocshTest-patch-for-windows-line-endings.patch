@@ -1,30 +1,51 @@
-diff --git a/modules/libcom/test/iocshTest.cpp b/modules/libcom/test/iocshTest.cpp
-index 4b98112da..ebc01ddd9 100644
 --- a/modules/libcom/test/iocshTest.cpp
 +++ b/modules/libcom/test/iocshTest.cpp
-@@ -111,8 +111,8 @@ std::string readFile(std::string filename)
+@@ -111,8 +111,8 @@
  
  bool compareFiles(const std::string& p1, const std::string& p2)
  {
 -  std::ifstream f1(p1.c_str(), std::ifstream::binary|std::ifstream::ate);
 -  std::ifstream f2(p2.c_str(), std::ifstream::binary|std::ifstream::ate);
-+  std::ifstream f1(p1.c_str(), std::ifstream::ate);
-+  std::ifstream f2(p2.c_str(), std::ifstream::ate);
++  std::ifstream f1(p1.c_str());
++  std::ifstream f2(p2.c_str());
  
    if (f1.fail() || f2.fail()) {
      testDiag("One or more files failed to open");
-@@ -120,10 +120,10 @@ bool compareFiles(const std::string& p1, const std::string& p2)
+@@ -120,24 +120,20 @@
      return false; // File problem
    }
  
+-  bool different = false;
 -  if (f1.tellg() != f2.tellg()) {
--    testDiag("File sizes did not match");
--    return false; // Size mismatch
+-    testDiag("Help text size is different");
+-    different = true;
 -  }
-+  // if (f1.tellg() != f2.tellg()) {
-+  //   testDiag("File sizes did not match");
-+  //   return false; // Size mismatch
-+  // }
+-  else {
+-    // Seek back to beginning and use std::equal to compare contents
+-    f1.seekg(0, std::ifstream::beg);
+-    f2.seekg(0, std::ifstream::beg);
++  // No size comparison: on Windows the captured output has CRLF line endings
++  // while the reference file has LF, so the sizes legitimately differ. The
++  // files are opened in text mode, which normalizes the endings for the
++  // content comparison.
++  f1.seekg(0, std::ifstream::beg);
++  f2.seekg(0, std::ifstream::beg);
  
-   // Seek back to beginning and use std::equal to compare contents
-   f1.seekg(0, std::ifstream::beg);
+-    different = !std::equal(
+-      std::istreambuf_iterator<char>(f1.rdbuf()),
+-      std::istreambuf_iterator<char>(),
+-      std::istreambuf_iterator<char>(f2.rdbuf())
+-    );
+-    if (different)
+-      testDiag("Help text output is different");
+-  }
++  bool different = !std::equal(
++    std::istreambuf_iterator<char>(f1.rdbuf()),
++    std::istreambuf_iterator<char>(),
++    std::istreambuf_iterator<char>(f2.rdbuf())
++  );
++  if (different)
++    testDiag("Help text output is different");
+ 
+   if (different) {
+     std::string line;
