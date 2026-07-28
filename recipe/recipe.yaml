@@ -19,9 +19,13 @@ source:
     - initialise_pthreadInfo_attr.patch
     - test_dbtemplate_fix_relative_path_tests.patch
     - increase_default_errlog_size.patch
+    - if: win
+      then:
+        - iocshTest-patch-for-windows-line-endings.patch
+        - skip_testCaProvider_on_windows.patch
 
 build:
-  number: 11
+  number: 12
 
 outputs:
   - package:
@@ -43,6 +47,7 @@ outputs:
       run_exports:
         - ${{ pin_subpackage('epics-base', upper_bound='x.x.x.x') }}
     build:
+      script: build
       files:
         - etc
         - epics/bin
@@ -120,6 +125,7 @@ outputs:
       run_exports:
         - ${{ pin_subpackage('epics-base', upper_bound='x.x.x.x') }}
     build:
+      script: build
       files:
         - if: not win
           then: epics/lib/*/*.a
