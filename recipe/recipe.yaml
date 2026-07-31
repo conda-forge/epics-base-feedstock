@@ -4,7 +4,7 @@ schema_version: 1
 
 context:
   name: epics-base
-  version: 7.0.9.0
+  version: "7.0.10"
 
 recipe:
   name: ${{ name }}
@@ -33,7 +33,7 @@ source:
         - skip_testCaProvider_on_windows.patch
 
 build:
-  number: 13
+  number: 0
 
 outputs:
   - package:
@@ -98,8 +98,7 @@ outputs:
               - test -f ${EPICS_BASE}/include/epicsVersion.h
               - test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libCom${SHLIB_EXT}
               - test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libca${SHLIB_EXT}
-          - if: win
-            then:
+            else:
               - if not exist %EPICS_BASE%\bin\%EPICS_HOST_ARCH%\caget.exe exit 1
               - if not exist %EPICS_BASE%\bin\%EPICS_HOST_ARCH%\Com.dll exit 1
               - if not exist %EPICS_BASE%\bin\%EPICS_HOST_ARCH%\ca.dll exit 1
@@ -140,10 +139,9 @@ outputs:
     tests:
       - script:
           - if: not win
-            then: test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libca.a
-          - if: not win
-            then: test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libCom.a
-
+            then:
+              - test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libca.a
+              - test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libCom.a
 about:
   license: EPICS
   license_file: LICENSE
