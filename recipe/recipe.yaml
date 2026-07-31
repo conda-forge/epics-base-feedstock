@@ -36,8 +36,12 @@ build:
   number: 13
 
 outputs:
-  - package:
-      name: epics-base
+  # Staging output: builds EPICS once; the package outputs below select their
+  # files from this build via `inherit`. Run exports from the staging
+  # dependencies (libgcc, libstdcxx, readline) are appended to the inheriting
+  # outputs automatically.
+  - staging:
+      name: epics-base-staging
     requirements:
       build:
         - ${{ compiler('c') }}
@@ -50,35 +54,87 @@ outputs:
       host:
         - if: unix
           then: readline
+    build:
+      script: build
+
+  - package:
+      name: epics-base
+    inherit: epics-base-staging
+    requirements:
       run:
         - perl
       run_exports:
         - ${{ pin_subpackage('epics-base', upper_bound='x.x.x.x') }}
     build:
-      script: build
       files:
-        - etc
-        - epics/bin
-        - epics/cfg
-        - epics/configure
-        - epics/db
-        - epics/dbd
-        - epics/html
-        - epics/include
-        # windows .dll are under bin
-        - if: win
-          then:
-            - epics/bin/*/*.dll
-            - epics/lib/*/*.lib
-            - Library/lib/*.lib
-            - Library/bin/*.dll
-        - if: osx
-          then: epics/lib/*/*.dylib
-        - if: linux
-          then: epics/lib/*/*.so*
-        - epics/lib/perl
-        - epics/lib/pkgconfig
-        - epics/templates
+        include:
+          - etc
+          - epics/bin
+          - epics/db
+          - epics/dbd
+          - epics/html
+          - epics/include
+          # windows .dll are under bin
+          - if: win
+            then:
+              - epics/bin/*/*.dll
+              - epics/lib/*/*.lib
+              - Library/lib/*.lib
+              - Library/bin/*.dll
+          - if: osx
+            then: epics/lib/*/*.dylib
+          - if: linux
+            then: epics/lib/*/*.so*
+          # runtime pieces of lib/perl; the build-time perl modules belong to
+          # epics-base-devel. The perl CA bindings are not built on win.
+          - if: not win
+            then:
+              - epics/lib/perl/CA.pm
+              - epics/lib/perl/5*/**
+          - epics/lib/perl/EpicsHostArch.pl
+          - epics/lib/pkgconfig
+        # everything under bin that is part of the EPICS build system; keep in
+        # sync with the epics-base-devel include list
+        exclude:
+          - epics/bin/*/assembleSnippets.pl
+          - epics/bin/*/bldEnvData.pl
+          - epics/bin/*/convertRelease.pl
+          - epics/bin/*/cvsclean.pl
+          - epics/bin/*/dbExpand.pl
+          - epics/bin/*/dbdExpand.pl
+          - epics/bin/*/dbdToHtml.pl
+          - epics/bin/*/dbdToMD.pl
+          - epics/bin/*/dbdToMenuH.pl
+          - epics/bin/*/dbdToRecordtypeH.pl
+          - epics/bin/*/depclean.pl
+          - epics/bin/*/dos2unix.pl
+          - epics/bin/*/epicsMakeMemFs.pl
+          - epics/bin/*/epicsProve.pl
+          - epics/bin/*/expandVars.pl
+          - epics/bin/*/filterMakeflags.pl
+          - epics/bin/*/fullPathName.pl
+          - epics/bin/*/genVersionHeader.pl
+          - epics/bin/*/installEpics.pl
+          - epics/bin/*/makeAPIheader.pl
+          - epics/bin/*/makeBaseApp.pl
+          - epics/bin/*/makeBaseExt.pl
+          - epics/bin/*/makeIncludeDbd.pl
+          - epics/bin/*/makeMakefile.pl
+          - epics/bin/*/makeTestfile.pl
+          - epics/bin/*/mkmf.pl
+          - epics/bin/*/munch.pl
+          - epics/bin/*/podRemove.pl
+          - epics/bin/*/podToHtml.pl
+          - epics/bin/*/podToMD.pl
+          - epics/bin/*/registerRecordDeviceDriver.pl
+          - epics/bin/*/replaceVAR.pl
+          - epics/bin/*/tap-to-junit-xml.pl
+          - epics/bin/*/testFailures.pl
+          - epics/bin/*/useManifestTool.pl
+          - epics/bin/*/antelope*
+          - epics/bin/*/e_flex*
+          - epics/bin/*/makeBpt*
+          - epics/bin/*/makeRPath.py
     tests:
       - script:
           - caget -h
@@ -98,6 +154,19 @@ outputs:
               - test -f ${EPICS_BASE}/include/epicsVersion.h
               - test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libCom${SHLIB_EXT}
               - test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libca${SHLIB_EXT}
+              # runtime perl pieces stay in this package; on cross-compiled
+              # variants the perl CA bindings are only built for the build
+              # machine arch, so locate capr.pl with a glob
+              - test -f ${EPICS_BASE}/bin/*/capr.pl
+              - test -f ${EPICS_BASE}/lib/perl/CA.pm
+              - test -f ${EPICS_BASE}/lib/perl/EpicsHostArch.pl
+              # msi stays in the runtime package: IOC startup scripts use it
+              # to expand templates
+              - test -x ${EPICS_BASE}/bin/${EPICS_HOST_ARCH}/msi
+              # the build system is split out into epics-base-devel
+              - test ! -d ${EPICS_BASE}/configure
+              - test ! -d ${EPICS_BASE}/templates
+              - test ! -f ${EPICS_BASE}/bin/${EPICS_HOST_ARCH}/makeBaseApp.pl
           - if: win
             then:
               - if not exist %EPICS_BASE%\bin\%EPICS_HOST_ARCH%\caget.exe exit 1
@@ -108,24 +177,96 @@ outputs:
               - if not exist %EPICS_BASE%\lib\%EPICS_HOST_ARCH%\Com.lib exit 1
               - if not exist %PREFIX%\Library\bin\Com.dll exit 1
               - if not exist %PREFIX%\Library\lib\Com.lib exit 1
+              - if not exist %EPICS_BASE%\lib\perl\EpicsHostArch.pl exit 1
+              - if not exist %EPICS_BASE%\bin\%EPICS_HOST_ARCH%\msi.exe exit 1
+              - if exist %EPICS_BASE%\configure exit 1
+              - if exist %EPICS_BASE%\templates exit 1
+              - if exist %EPICS_BASE%\bin\%EPICS_HOST_ARCH%\makeBaseApp.pl exit 1
         files:
           source:
             - modules/pva2pva/loopback.conf
 
+  # The EPICS build system: the configure/RULES tree and the tools it invokes
+  # during module/application builds, plus the makeBaseApp scaffolding. Module
+  # recipes list this package in host next to epics-base; build tools (make,
+  # and for cross-compilation a build-platform perl) stay build dependencies
+  # of the consumer.
+  - package:
+      name: epics-base-devel
+    inherit: epics-base-staging
+    requirements:
+      run:
+        # the interpreter for the perl scripts this package ships; make stays
+        # a build dependency of the consumer, as for any other build tool.
+        # Cross-compiling consumers also declare perl in build, as today: this
+        # one is the target-platform perl.
+        - perl
+        - ${{ pin_subpackage('epics-base', exact=True) }}
+      run_exports:
+        - ${{ pin_subpackage('epics-base', upper_bound='x.x.x.x') }}
+    build:
+      files:
+        include:
+          - epics/configure
+          - epics/cfg
+          - epics/templates
+          - epics/lib/perl
+          # build-system tools under bin; keep in sync with the epics-base
+          # exclude list
+          - epics/bin/*/*.pl
+          - epics/bin/*/antelope*
+          - epics/bin/*/e_flex*
+          - epics/bin/*/makeBpt*
+          # invoked as $(PYTHON) makeRPath.py, and only when a consumer opts
+          # into LINKER_USE_RPATH=ORIGIN; such consumers declare python in
+          # build themselves, so it is not a run dependency here
+          - epics/bin/*/makeRPath.py
+        # runtime perl pieces that stay in epics-base
+        exclude:
+          - epics/bin/*/capr.pl
+          - epics/lib/perl/CA.pm
+          - epics/lib/perl/EpicsHostArch.pl
+          - epics/lib/perl/5*/**
+    tests:
+      - script:
+          # perl must arrive as a run dependency of this package
+          - perl --version
+          - if: not win
+            then:
+              - test -f ${EPICS_BASE}/configure/CONFIG_BASE
+              - test -f ${EPICS_BASE}/configure/RULES
+              - test -d ${EPICS_BASE}/cfg
+              - test -d ${EPICS_BASE}/templates/makeBaseApp
+              - test -f ${EPICS_BASE}/bin/${EPICS_HOST_ARCH}/makeBaseApp.pl
+              - test -f ${EPICS_BASE}/lib/perl/EPICS/Getopts.pm
+              # pulled in via the exact epics-base run dependency
+              - test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libCom${SHLIB_EXT}
+          - if: win
+            then:
+              - if not exist %EPICS_BASE%\configure\CONFIG_BASE exit 1
+              - if not exist %EPICS_BASE%\bin\%EPICS_HOST_ARCH%\makeBaseApp.pl exit 1
+              - if not exist %EPICS_BASE%\lib\perl\EPICS\Getopts.pm exit 1
+      # Scaffold an IOC application with makeBaseApp and build it against the
+      # installed epics-base, with only this package's run dependencies plus
+      # make and the compilers.
+      - if: linux
+        then:
+          - script:
+              - cd "$(mktemp -d)"
+              - makeBaseApp.pl -t ioc scratch
+              - make
+              - test -x bin/${EPICS_HOST_ARCH}/scratch
+            requirements:
+              run:
+                - ${{ compiler('c') }}
+                - ${{ compiler('cxx') }}
+                - ${{ stdlib("c") }}
+                - make
+
   - package:
       name: epics-base-static-libs
+    inherit: epics-base-staging
     requirements:
-      build:
-        - ${{ compiler('c') }}
-        - ${{ stdlib("c") }}
-        - ${{ compiler('cxx') }}
-        - make
-        - perl
-        - if: win
-          then: m2-patch
-      host:
-        - if: unix
-          then: readline
       run:
         - if: not win
           then: ${{ pin_subpackage('epics-base', exact=True) }}
@@ -133,7 +274,6 @@ outputs:
       run_exports:
         - ${{ pin_subpackage('epics-base', upper_bound='x.x.x.x') }}
     build:
-      script: build
       files:
         - if: not win
           then: epics/lib/*/*.a
