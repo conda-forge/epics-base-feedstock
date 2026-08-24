@@ -40,13 +40,6 @@ Current build status
                   <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/epics-base-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_" alt="variant">
                 </a>
               </td>
-            </tr><tr>
-              <td>win_64</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=6856&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/epics-base-feedstock?branchName=main&jobName=win&configuration=win%20win_64_" alt="variant">
-                </a>
-              </td>
             </tr>
           </tbody>
         </table>
@@ -73,31 +66,73 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
 
-Once the `conda-forge` channel has been enabled, `epics-base, epics-base-static-libs` can be installed with `conda`:
+How to use
+----------
+
+<details>
+<summary>With conda</summary>
 
 ```
 conda install epics-base epics-base-static-libs
 ```
 
-or with `mamba`:
+</details>
+
+<details>
+<summary>With mamba</summary>
 
 ```
 mamba install epics-base epics-base-static-libs
 ```
 
-It is possible to list all of the versions of `epics-base` available on your platform with `conda`:
+</details>
+
+<details>
+<summary>With pixi</summary>
+
+```
+# for adding to your local project
+pixi add epics-base epics-base-static-libs
+# for installing globally
+pixi global install epics-base epics-base-static-libs
+```
+
+</details>
+
+Search package versions
+-----------------------
+
+It is possible to list all of the versions of `epics-base` available on your platform:
+
+<details>
+<summary>With conda</summary>
 
 ```
 conda search epics-base --channel conda-forge
 ```
 
-or with `mamba`:
+</details>
+
+<details>
+<summary>With mamba</summary>
 
 ```
 mamba search epics-base --channel conda-forge
 ```
 
-Alternatively, `mamba repoquery` may provide more information:
+</details>
+
+<details>
+<summary>With pixi</summary>
+
+```
+pixi search epics-base --channel conda-forge
+```
+
+</details>
+
+<details>
+<summary>With mamba repoquery, which may provide more information</summary>
 
 ```
 # Search all versions available on your platform:
@@ -109,6 +144,8 @@ mamba repoquery whoneeds epics-base --channel conda-forge
 # List dependencies of `epics-base`:
 mamba repoquery depends epics-base --channel conda-forge
 ```
+
+</details>
 
 
 About conda-forge
