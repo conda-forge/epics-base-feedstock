@@ -30,7 +30,7 @@ source:
         - skip_testCaProvider_on_windows.patch
 
 build:
-  number: 0
+  number: 1
 
 outputs:
   - package:
@@ -42,6 +42,8 @@ outputs:
         - ${{ compiler('cxx') }}
         - make
         - perl
+        - if: unix
+          then: sed
         - if: win
           then: m2-patch
       host:
