@@ -1,10 +1,10 @@
-if %ARCH%==32 (
-    set EPICS_HOST_ARCH=win32-x86
-) else if %ARCH%==64 (
-    set EPICS_HOST_ARCH=windows-x64
+if "%ARCH%"=="32" (
+    set "EPICS_HOST_ARCH=win32-x86"
+) else if "%ARCH%"=="64" (
+    set "EPICS_HOST_ARCH=windows-x64"
 )
 
-set EPICS_BASE=%PREFIX%\epics
+set "EPICS_BASE=%PREFIX%\epics"
 echo INSTALL_LOCATION = %EPICS_BASE:\=/%> configure\CONFIG_SITE.local
 
 REM SCRIPTS causes failure of GNU make
