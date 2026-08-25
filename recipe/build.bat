@@ -10,6 +10,10 @@ echo INSTALL_LOCATION = %EPICS_BASE:\=/%> configure\CONFIG_SITE.local
 REM SCRIPTS causes failure of GNU make
 set SCRIPTS=
 
+REM Strawberry Perl does not understand C.UTF-8 and warns on every invocation
+set "LC_ALL="
+set "LANG="
+
 echo Building at %CD%
 make -j %CPU_COUNT%
 if errorlevel 1 (
