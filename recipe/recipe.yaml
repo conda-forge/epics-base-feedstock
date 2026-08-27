@@ -30,7 +30,7 @@ source:
         - skip_testCaProvider_on_windows.patch
 
 build:
-  number: 1
+  number: 2
 
 outputs:
   - package:
@@ -113,6 +113,12 @@ outputs:
 
   - package:
       name: epics-base-static-libs
+    build:
+      skip:
+        - win
+      script: build
+      files:
+        - epics/lib/*/*.a
     requirements:
       build:
         - ${{ compiler('c') }}
@@ -120,28 +126,18 @@ outputs:
         - ${{ compiler('cxx') }}
         - make
         - perl
-        - if: win
-          then: m2-patch
       host:
         - if: unix
           then: readline
       run:
-        - if: not win
-          then: ${{ pin_subpackage('epics-base', exact=True) }}
+        - ${{ pin_subpackage('epics-base', exact=True) }}
         - perl
       run_exports:
         - ${{ pin_subpackage('epics-base', upper_bound='x.x.x.x') }}
-    build:
-      script: build
-      files:
-        - if: not win
-          then: epics/lib/*/*.a
     tests:
       - script:
-          - if: not win
-            then: test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libca.a
-          - if: not win
-            then: test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libCom.a
+          - test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libca.a
+          - test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libCom.a
 
 about:
   license: EPICS
