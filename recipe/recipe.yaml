@@ -4,7 +4,7 @@ schema_version: 1
 
 context:
   name: epics-base
-  version: 7.0.10.0
+  version: "7.0.11"
 
 recipe:
   name: ${{ name }}
@@ -30,7 +30,7 @@ source:
         - skip_testCaProvider_on_windows.patch
 
 build:
-  number: 2
+  number: 0
 
 outputs:
   - package:
