@@ -139,8 +139,18 @@ outputs:
           - test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libCom.a
 
 about:
-  license: EPICS
-  license_file: LICENSE
+  license: EPICS AND MIT
+  license_file:
+    - LICENSE
+    # The bundled PVA modules are MIT licensed by their own copyright holders
+    - modules/normativeTypes/LICENSE
+    - modules/pva2pva/LICENSE
+    - modules/pvAccess/LICENSE
+    - modules/pvAccess/COPYRIGHT
+    - modules/pvaClient/LICENSE
+    - modules/pvData/LICENSE
+    - modules/pvDatabase/LICENSE
+    - modules/pvDatabase/COPYRIGHT
   summary: EPICS Base Library
   homepage: http://www.aps.anl.gov/epics
 
