@@ -22,12 +22,12 @@ source:
   url: https://github.com/epics-base/${{ name }}/releases/download/R7.0.11/base-7.0.11.tar.gz
   sha256: 16b37a28cb7ad85be11ec3727160e6f373d6f970ea7a2fdc25b630059657a3b7
   patches:
-    - RULES_BUILD_remove_mkdir.patch
-    - CONFIG_SITE_darwin_remove_brew_and_port.patch
+    - 0001-Do-not-create-INSTALL_LIB-from-the-library-rules.patch
+    - 0002-Do-not-search-Homebrew-or-MacPorts-on-darwin.patch
     - if: win
       then:
-        - iocshTest-patch-for-windows-line-endings.patch
-        - skip_testCaProvider_on_windows.patch
+        - 0003-Compare-iocshTest-help-text-in-text-mode.patch
+        - 0004-Skip-testCaProvider-on-Windows.patch
 
 build:
   number: 0
