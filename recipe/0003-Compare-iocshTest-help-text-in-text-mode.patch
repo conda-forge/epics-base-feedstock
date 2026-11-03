@@ -1,0 +1,67 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Grzegorz Kowalski <grzegorz.kowalski@ess.eu>
+Date: Fri, 3 Jul 2026 12:00:00 +0200
+Subject: [PATCH] Compare iocshTest help text in text mode
+
+The reference files that the generated help text is compared to have
+Unix line endings, while the output captured on Windows has CRLF. Open
+both files in text mode so the endings are normalised, and drop the size
+comparison, since the sizes still differ.
+---
+ modules/libcom/test/iocshTest.cpp | 36 ++++++++++++++-----------------
+ 1 file changed, 16 insertions(+), 20 deletions(-)
+
+diff --git a/modules/libcom/test/iocshTest.cpp b/modules/libcom/test/iocshTest.cpp
+index b67692fbe..730e79565 100644
+--- a/modules/libcom/test/iocshTest.cpp
++++ b/modules/libcom/test/iocshTest.cpp
+@@ -111,8 +111,8 @@ std::string readFile(std::string filename)
+ 
+ bool compareFiles(const std::string& p1, const std::string& p2)
+ {
+-  std::ifstream f1(p1.c_str(), std::ifstream::binary|std::ifstream::ate);
+-  std::ifstream f2(p2.c_str(), std::ifstream::binary|std::ifstream::ate);
++  std::ifstream f1(p1.c_str());
++  std::ifstream f2(p2.c_str());
+ 
+   if (f1.fail() || f2.fail()) {
+     testDiag("One or more files failed to open");
+@@ -120,24 +120,20 @@ bool compareFiles(const std::string& p1, const std::string& p2)
+     return false; // File problem
+   }
+ 
+-  bool different = false;
+-  if (f1.tellg() != f2.tellg()) {
+-    testDiag("Help text size is different");
+-    different = true;
+-  }
+-  else {
+-    // Seek back to beginning and use std::equal to compare contents
+-    f1.seekg(0, std::ifstream::beg);
+-    f2.seekg(0, std::ifstream::beg);
+-
+-    different = !std::equal(
+-      std::istreambuf_iterator<char>(f1.rdbuf()),
+-      std::istreambuf_iterator<char>(),
+-      std::istreambuf_iterator<char>(f2.rdbuf())
+-    );
+-    if (different)
+-      testDiag("Help text output is different");
+-  }
++  // No size comparison: on Windows the captured output has CRLF line endings
++  // while the reference file has LF, so the sizes legitimately differ. The
++  // files are opened in text mode, which normalizes the endings for the
++  // content comparison.
++  f1.seekg(0, std::ifstream::beg);
++  f2.seekg(0, std::ifstream::beg);
++
++  bool different = !std::equal(
++    std::istreambuf_iterator<char>(f1.rdbuf()),
++    std::istreambuf_iterator<char>(),
++    std::istreambuf_iterator<char>(f2.rdbuf())
++  );
++  if (different)
++    testDiag("Help text output is different");
+ 
+   if (different) {
+     std::string line;

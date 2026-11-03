@@ -4,7 +4,7 @@ schema_version: 1
 
 context:
   name: epics-base
-  version: 7.0.10.0
+  version: 7.0.11.0
 
 recipe:
   name: ${{ name }}
@@ -19,18 +19,18 @@ source:
   # Prefer the GitHub release asset over epics-controls.org: GH can re-cut
   # assets after the initial publish, while epics-controls keeps the first
   # cut and will then fail the recorded sha256 (useless as a mirror).
-  url: https://github.com/epics-base/${{ name }}/releases/download/R7.0.10/base-7.0.10.tar.gz
-  sha256: 44193e962793de514ead442e9b5096a13109f1ee275f131995826468aa89b839
+  url: https://github.com/epics-base/${{ name }}/releases/download/R7.0.11/base-7.0.11.tar.gz
+  sha256: 16b37a28cb7ad85be11ec3727160e6f373d6f970ea7a2fdc25b630059657a3b7
   patches:
-    - RULES_BUILD_remove_mkdir.patch
-    - increase_default_errlog_size.patch
+    - 0001-Do-not-create-INSTALL_LIB-from-the-library-rules.patch
+    - 0002-Do-not-search-Homebrew-or-MacPorts-on-darwin.patch
     - if: win
       then:
-        - iocshTest-patch-for-windows-line-endings.patch
-        - skip_testCaProvider_on_windows.patch
+        - 0003-Compare-iocshTest-help-text-in-text-mode.patch
+        - 0004-Skip-testCaProvider-on-Windows.patch
 
 build:
-  number: 2
+  number: 0
 
 outputs:
   - package:
@@ -140,8 +140,18 @@ outputs:
           - test -f ${EPICS_BASE}/lib/${EPICS_HOST_ARCH}/libCom.a
 
 about:
-  license: EPICS
-  license_file: LICENSE
+  license: EPICS AND MIT
+  license_file:
+    - LICENSE
+    # The bundled PVA modules are MIT licensed by their own copyright holders
+    - modules/normativeTypes/LICENSE
+    - modules/pva2pva/LICENSE
+    - modules/pvAccess/LICENSE
+    - modules/pvAccess/COPYRIGHT
+    - modules/pvaClient/LICENSE
+    - modules/pvData/LICENSE
+    - modules/pvDatabase/LICENSE
+    - modules/pvDatabase/COPYRIGHT
   summary: EPICS Base Library
   homepage: http://www.aps.anl.gov/epics
 

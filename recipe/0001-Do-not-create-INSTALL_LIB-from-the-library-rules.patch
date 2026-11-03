@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Douglas Araujo <douglas.araujo@ess.eu>
+Date: Mon, 18 Aug 2025 12:00:00 +0200
+Subject: [PATCH] Do not create INSTALL_LIB from the library rules
+
+Creating the library directory as an order-only prerequisite of the
+library targets makes it exist too early for a downstream application.
+The rule is only there upstream to silence a warning on macOS.
+---
+ configure/RULES_BUILD | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure/RULES_BUILD b/configure/RULES_BUILD
+index 759b16310..70e482890 100644
+--- a/configure/RULES_BUILD
++++ b/configure/RULES_BUILD
+@@ -332,7 +332,7 @@ $(LOADABLE_SHRLIBNAME): $(LOADABLE_SHRLIB_PREFIX)%$(LOADABLE_SHRLIB_SUFFIX):
+ 
+ $(LIBNAME) $(SHRLIBNAME) $(LOADABLE_SHRLIBNAME): | $(INSTALL_LIB)
+ $(INSTALL_LIB):
+-	$(MKDIR) $@
++#	$(MKDIR) $@
+ 
+ #---------------------------------------------------------------
+ # C++ munching for VxWorks
