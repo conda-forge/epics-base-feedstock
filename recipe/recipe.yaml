@@ -23,6 +23,7 @@ source:
   sha256: 16b37a28cb7ad85be11ec3727160e6f373d6f970ea7a2fdc25b630059657a3b7
   patches:
     - RULES_BUILD_remove_mkdir.patch
+    - CONFIG_SITE_darwin_remove_brew_and_port.patch
     - if: win
       then:
         - iocshTest-patch-for-windows-line-endings.patch

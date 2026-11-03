@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Anders Lindh Olsson <anders.lindh.olsson@gmail.com>
+Date: Tue, 3 Nov 2026 13:18:39 +0100
+Subject: [PATCH] Do not search Homebrew or MacPorts on darwin
+
+The darwin site file adds the include and library directories of
+Homebrew and MacPorts whenever `brew` or `port` is on `PATH`. conda
+provides every dependency, so on a build host with Homebrew the
+libraries were linked against Homebrew's readline instead of conda's.
+The file is installed with EPICS, so downstream builds would pick up
+the same flags.
+---
+ .../os/CONFIG_SITE.darwinCommon.darwinCommon   | 18 +-----------------
+ 1 file changed, 1 insertion(+), 17 deletions(-)
+
+diff --git a/configure/os/CONFIG_SITE.darwinCommon.darwinCommon b/configure/os/CONFIG_SITE.darwinCommon.darwinCommon
+index 85ccbad38..f4e8cf8e0 100644
+--- a/configure/os/CONFIG_SITE.darwinCommon.darwinCommon
++++ b/configure/os/CONFIG_SITE.darwinCommon.darwinCommon
+@@ -3,20 +3,4 @@
+ # Site specific definitions for darwin builds
+ #-------------------------------------------------------
+ 
+-# These settings are designed for users of Homebrew.
+-# Users of other third-party package managers are welcome to
+-# provide patches appropriate for their manager.
+-HOMEBREW_DIR := $(shell brew --prefix 2>/dev/null)
+-INCLUDES += $(HOMEBREW_DIR:%=-I%/include)
+-LDFLAGS += $(HOMEBREW_DIR:%=-L%/lib)
+-
+-# Look for Homebrew's readline
+-ifneq (,$(wildcard $(HOMEBREW_DIR)/opt/readline))
+-  INCLUDES_READLINE += -I$(HOMEBREW_DIR)/opt/readline/include
+-  LDFLAGS_READLINE += -L$(HOMEBREW_DIR)/opt/readline/lib
+-endif
+-
+-# Look for MacPorts
+-MACPORT_DIR := $(patsubst %/bin/port,%,$(shell which port))
+-INCLUDES += $(MACPORT_DIR:%=-I%/include)
+-LDFLAGS += $(MACPORT_DIR:%=-L%/lib)
++# conda provides every dependency, so do not search Homebrew or MacPorts.
