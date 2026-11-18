@@ -30,7 +30,7 @@ source:
         - skip_testCaProvider_on_windows.patch
 
 build:
-  number: 2
+  number: 3
 
 outputs:
   - package:
@@ -51,6 +51,10 @@ outputs:
           then: readline
       run:
         - perl
+      run_constraints:
+        # Earlier builds of epicscorelibs bundle their own copy of EPICS base
+        # (conda-forge/epicscorelibs-feedstock#43)
+        - epicscorelibs >=7.0.10.99.0.1
       run_exports:
         - ${{ pin_subpackage('epics-base', upper_bound='x.x.x.x') }}
     build:
