@@ -30,7 +30,7 @@ source:
         - skip_testCaProvider_on_windows.patch
 
 build:
-  number: 2
+  number: 3
 
 outputs:
   - package:
